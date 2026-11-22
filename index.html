@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VALORANT COACHING</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#090d14;color:white;font-family:Arial,sans-serif}
+header{height:650px;padding:35px 8%;background:linear-gradient(90deg,#090d14 25%,#172331 100%);position:relative}
+nav{display:flex;justify-content:space-between}
+.logo{color:#d9b46b;font-weight:bold;letter-spacing:3px}
+nav a{color:white;text-decoration:none;margin-left:20px}
+.hero{margin-top:150px}
+.hero small{color:#d9b46b;letter-spacing:5px}
+h1{font-size:65px;line-height:1.1}
+.hero p{color:#aeb9c8;line-height:1.8}
+button{background:#d9b46b;border:0;padding:14px 24px;cursor:pointer;font-weight:bold}
+section{padding:75px 8%}
+h2{font-size:34px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+.card,.price{background:#151e2b;padding:25px;border:1px solid #293648}
+.card h3{color:#d9b46b}
+.card p{color:#aeb9c8;line-height:1.7}
+.price{margin-bottom:12px;cursor:pointer}
+.price:hover{border-color:#d9b46b}
+#preview{margin-top:20px;padding:30px;background:#151e2b;text-align:center}
+#preview img{max-width:100%}
+input{display:block;width:100%;padding:12px;margin:10px 0;background:#101722;color:white;border:1px solid #455266}
+footer{text-align:center;padding:30px;color:#8290a2}
+@media(max-width:650px){.cards{grid-template-columns:1fr}h1{font-size:43px}header{padding:25px 6%}nav a{margin-left:8px}}
+</style>
+</head>
+<body>
+<header>
+<nav>
+<div class="logo">V / COACHING</div>
+<div><a href="#lesson">강의</a><a href="#price">가격표</a></div>
+</nav>
+<div class="hero">
+<small>VALORANT PERSONAL COACHING</small>
+<h1>체임버로 승률 100%를 달성한 기사</h1>
+<p>단 하나의 패배도 주지 않습니다</p>
+<button onclick="document.querySelector('#price').scrollIntoView()">강의 확인하기</button>
+</div>
+</header>
+<section id="lesson">
+
+<section id="price">
+<h2>대리 가격표</h2>
+<div class="price" onclick="showPrice('솔랭 대리')">솔랭대리　→</div>
+<div id="preview">가격 항목을 클릭해 주세요.</div>
+</section>
+<section>
+<h2>관리자 편집</h2>
+<p>가격표 상세 이미지 주소를 입력해 주세요.</p>
+<input id="imageUrl" placeholder="이미지 주소 입력">
+<button onclick="saveImage()">이미지 저장</button>
+</section>
+<footer>VALORANT COACHING</footer>
+<script>
+let selected="";
+function showPrice(name){
+selected=name;
+let image=localStorage.getItem(name);
+document.getElementById("preview").innerHTML=
+"<h3>"+name+"</h3>"+(image?'<img src="'+image+'">':"아직 등록된 가격표 이미지가 없습니다.");
+}
+function saveImage(){
+if(!selected){alert("먼저 가격 항목을 클릭하세요.");return;}
+let url=document.getElementById("imageUrl").value;
+if(!url){alert("이미지 주소를 입력하세요.");return;}
+localStorage.setItem(selected,url);
+showPrice(selected);
+alert("저장되었습니다.");
+}
+</script>
+</body>
+</html>
+
+<section class="admin">
+
+ <div id="loginPanel">
+  <h2>관리자 로그인</h2>
+  <p>최초 접속 시 관리자 비밀번호를 설정하세요.</p>
+
+  <label>비밀번호</label>
+  <input id="password" type="password">
+
+  <div id="confirmArea">
+   <label>비밀번호 확인</label>
+   <input id="passwordConfirm" type="password">
+  </div>
+
+  <button onclick="login()">로그인 / 비밀번호 설정</button>
+  <p class="status" id="loginStatus"></p>
+ </div>
+
+ <div id="adminPanel">
+  <h2>관리자 페이지</h2>
+
+  <h3>메인 화면 편집</h3>
+
+  <label>로고</label>
+  <input id="editLogo">
+
+  <label>메인 제목</label>
+  <input id="editTitle">
+
+  <label>메인 설명</label>
+  <textarea id="editDesc"></textarea>
+
+  <label>문의 설명</label>
+  <input id="editContact">
+
+  <label>카카오톡 문의 링크</label>
+  <input id="editLink">
+
+  <hr>
+
+  <h3>가격표 편집</h3>
+  <div id="priceEditor"></div>
+
+  <button onclick="addPrice()">+ 가격 추가</button>
+
+  <hr>
+
+  <button onclick="saveAll()">변경사항 저장</button>
+  <button class="secondary" onclick="logout()">로그아웃</button>
+  <button class="secondary" onclick="changePassword()">비밀번호 변경</button>
+
+  <p class="status" id="saveStatus"></p>
+ </div>
+</section>
+
+<footer>
+ © VALORANT COACHING
+</footer>
+
+<script>
+
+// 기본 가격 데이터
+const defaultPrices=[
+ ["브론즈","6,000원","20,000원"],
+ ["실버","6,000원","20,000원"],
+ ["골드","8,000원","25,000원"],
+ ["플래티넘 1~2","10,000원","30,000원"],
+ ["플래티넘 3","10,000원","40,000원"],
+ ["다이아몬드 1","14,000원","45,000원"],
+ ["다이아몬드 2","15,000원","50,000원"],
+ ["다이아몬드 3","16,000원","55,000원"],
+ ["초월자 1","20,000원","65,000원"],
+ ["초월자 2","22,000원","75,000원"],
+ ["초월자 3","25,000원","85,000원"],
+ ["불멸 1","35,000원","150,000원"],
+ ["불멸 2","40,000원","150,000원"],
+ ["불멸 3","45,000원","400,000원"],
+ ["레디언트","68,000원","100점당 400,000원"]
+];
+
+let prices=JSON.parse(localStorage.getItem("coachPrices"))||defaultPrices;
+
+let settings=JSON.parse(localStorage.getItem("coachSettings"))||{
+ logo:"V / COACHING",
+ title:"한계를 넘는 플레이를 만들다.",
+ desc:"당신의 플레이를 분석하고 실전에서 통하는 습관을 만듭니다.",
+ contact:"강의 문의는 아래 버튼을 이용해 주세요.",
+ link:"https://open.kakao.com/"
+};
+
+function safe(value){
+ return String(value).replace(/[&<>"']/g,c=>({
+ "&":"&amp;","<":"&lt;",">":"&gt;",
+ '"':"&quot;","'":"&#39;"
+ }[c]));
+}
+
+function render(){
+
+ document.getElementById("logo").textContent=settings.logo;
+ document.getElementById("mainTitle").textContent=settings.title;
+ document.getElementById("mainDesc").textContent=settings.desc;
+ document.getElementById("contactDesc").textContent=settings.contact;
+ document.getElementById("contactLink").href=settings.link;
+
+ document.getElementById("priceBody").innerHTML=prices.map(p=>`
+ <tr>
+  <td>${safe(p[0])}</td>
+  <td>${safe(p[1])}</td>
+  <td>${safe(p[2])}</td>
+ </tr>
+ `).join("");
+
+ renderEditor();
+}
+
+function renderEditor(){
+
+ const editor=document.getElementById("priceEditor");
+
+ editor.innerHTML=prices.map((p,i)=>`
+ <div class="admin-row">
+  <div>
+   <label>티어</label>
+   <input value="${safe(p[0])}" onchange="editPrice(${i},0,this.value)">
+  </div>
+  <div>
+   <label>승당 가격</label>
+   <input value="${safe(p[1])}" onchange="editPrice(${i},1,this.value)">
+  </div>
+  <div>
+   <label>승급 가격</label>
+   <input value="${safe(p[2])}" onchange="editPrice(${i},2,this.value)">
+   <button onclick="deletePrice(${i})">삭제</button>
+  </div>
+ </div>
+ `).join("");
+
+}
+
+function editPrice(i,col,value){
+ prices[i][col]=value;
+}
+
+function addPrice(){
+ prices.push(["새 티어","가격 입력","가격 입력"]);
+ render();
+}
+
+function deletePrice(i){
+ if(confirm("이 가격 항목을 삭제할까요?")){
+  prices.splice(i,1);
+  render();
+ }
+}
+
+// 관리자 비밀번호
+async function hashPassword(password){
+ const buffer=await crypto.subtle.digest(
+  "SHA-256",new TextEncoder().encode(password)
+ );
+ return Array.from(new Uint8Array(buffer))
+ .map(x=>x.toString(16).padStart(2,"0")).join("");
+}
+
+function isFirst(){
+ return !localStorage.getItem("coachPassword");
+}
+
+async function login(){
+
+ const password=document.getElementById("password").value;
+ const confirm=document.getElementById("passwordConfirm").value;
+
+ if(password.length<6){
+  document.getElementById("loginStatus").textContent="6자 이상 입력하세요.";
+  return;
+ }
+
+ if(isFirst()){
+
+  if(password!==confirm){
+   document.getElementById("loginStatus").textContent="비밀번호가 일치하지 않습니다.";
+   return;
+  }
+
+  localStorage.setItem("coachPassword",await hashPassword(password));
+
+ }else{
+
+  const saved=localStorage.getItem("coachPassword");
+  if(await hashPassword(password)!==saved){
+   document.getElementById("loginStatus").textContent="비밀번호가 틀렸습니다.";
+   return;
+  }
+ }
+
+ openAdmin();
+}
+
+function openAdmin(){
+
+ document.getElementById("loginPanel").style.display="none";
+ document.getElementById("adminPanel").style.display="block";
+
+ document.getElementById("editLogo").value=settings.logo;
+ document.getElementById("editTitle").value=settings.title;
+ document.getElementById("editDesc").value=settings.desc;
+ document.getElementById("editContact").value=settings.contact;
+ document.getElementById("editLink").value=settings.link;
+
+ renderEditor();
+}
+
+function saveAll(){
+
+ settings={
+  logo:document.getElementById("editLogo").value,
+  title:document.getElementById("editTitle").value,
+  desc:document.getElementById("editDesc").value,
+  contact:document.getElementById("editContact").value,
+  link:document.getElementById("editLink").value
+ };
+
+ localStorage.setItem("coachSettings",JSON.stringify(settings));
+ localStorage.setItem("coachPrices",JSON.stringify(prices));
+
+ render();
+
+ document.getElementById("saveStatus").textContent="저장 완료!";
+}
+
+function logout(){
+ document.getElementById("adminPanel").style.display="none";
+ document.getElementById("loginPanel").style.display="block";
+ document.getElementById("password").value="";
+}
+
+async function changePassword(){
+
+ const oldPassword=prompt("현재 비밀번호");
+ if(!oldPassword)return;
+
+ if(await hashPassword(oldPassword)!==localStorage.getItem("coachPassword")){
+  alert("현재 비밀번호가 틀렸습니다.");
+  return;
+ }
+
+ const newPassword=prompt("새 비밀번호 (6자 이상)");
+ if(!newPassword||newPassword.length<6){
+  alert("6자 이상 입력하세요.");
+  return;
+ }
+
+ localStorage.setItem("coachPassword",await hashPassword(newPassword));
+ alert("비밀번호가 변경되었습니다.");
+}
+
+if(!isFirst()){
+ document.getElementById("confirmArea").style.display="none";
+ document.getElementById("loginStatus").textContent="비밀번호를 입력해 주세요.";
+}
+
+render();
+
+</script>
+</body>
+</html>
+
